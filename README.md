@@ -345,6 +345,14 @@ const ProgressBarComponent = useCallback(({ completedCount, inCompletedCount }: 
   );
 ```
 
+## D. 디바이스 크기를 고려한 디자인
+
+사용자들의 다양한 기기에서 일관된 및 향상된 앱 경험을 누릴 수 있도록 고민했습니다. <br/>
+다양한 iPhone 디바이스 크기를 고려하여 체크리스트 탭 크기를 잡았습니다. <br/>
+간단한 시연 영상을 첨부합니다.
+
+![example](https://github.com/Tchaikovsky1114/FrontendAssignment/assets/96774661/b5217115-42c7-4535-8b55-aada07e776bf)
+
 
 
 ### Etc
