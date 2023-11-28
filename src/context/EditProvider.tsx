@@ -24,7 +24,6 @@ export const EditProvider = ({children}: PropsWithChildren) => {
   const undoStackRef = useRef<NewChecklist[]>([]);
 
   const popUndoStack = useCallback(() => {
-    console.log('=== popUndoStack ===');
     const lastChecklist = undoStackRef.current[undoStackRef.current.length - 1];
     undoStackRef.current = [];
 
@@ -32,7 +31,6 @@ export const EditProvider = ({children}: PropsWithChildren) => {
   }, []);
 
   const pushUndoStack = useCallback((checklist: NewChecklist) => {
-    console.log('=== pushUndoStack ===', checklist);
     undoStackRef.current.push(checklist);
   }, []);
 
