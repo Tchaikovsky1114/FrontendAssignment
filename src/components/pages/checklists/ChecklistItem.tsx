@@ -64,7 +64,7 @@ const ChecklisItem = ({
           numberOfLines={2}
           // eslint-disable-next-line react-native/no-inline-styles
           style={{
-            color: checklist.isCompleted ? '#C4C4C4' : theme.dark,
+            color: checklist.isCompleted ? '#C4C4C4' : theme.textColor,
             textDecorationLine: checklist.isCompleted ? 'line-through' : 'none',
           }}>
           {checklist.content}

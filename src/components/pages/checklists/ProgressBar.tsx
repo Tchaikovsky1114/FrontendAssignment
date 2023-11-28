@@ -34,7 +34,14 @@ const ProgressBar = ({completedCount, inCompletedCount}: Props) => {
   return (
     <View style={styles.progressWrapper}>
       <View style={styles.progressTitleBox}>
-        <Text style={[{fontSize: theme.textBase}, styles.textBold]}>
+        <Text
+          style={[
+            {
+              color: theme.textColor,
+              fontSize: theme.textBase,
+            },
+            styles.textBold,
+          ]}>
           {completedCount} of {inCompletedCount} completed
         </Text>
         <Text style={[{color: theme.accent}, styles.textBold]}>
