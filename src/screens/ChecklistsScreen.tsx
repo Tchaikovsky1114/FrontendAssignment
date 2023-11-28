@@ -1,4 +1,11 @@
-import {View, StyleSheet, FlatList, useWindowDimensions, Keyboard, TextInput} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  useWindowDimensions,
+  Keyboard,
+  TextInput,
+} from 'react-native';
 import React, {useCallback, useEffect, useRef} from 'react';
 import {useTheme} from '../context/ThemeProvider';
 import {useWeekContext} from '../context/WeekProvider';
@@ -6,7 +13,7 @@ import Checklist from '../components/pages/checklists/Checklist';
 import BottomUpSlideComponent from '../components/common/BottomUpSlideComponent';
 import useDelay from '../hooks/useDelay';
 import Toast from '../components/common/Toast';
-import { useToastContext } from '../context/ToastProvider';
+import {useToastContext} from '../context/ToastProvider';
 import SideSlideAnimationView from '../components/common/SideSlideAnimationView';
 import useChecklists from '../hooks/useChecklists';
 import WeekTabs from '../components/pages/checklists/WeekTabs';
@@ -20,54 +27,86 @@ const ChecklistsScreen = () => {
   const weekTabsRef = useRef<FlatList>(null);
   const createChecklistRef = useRef<TextInput | null>(null);
   const updateChecklistInputRef = useRef<TextInput | null>(null);
-  const { selectedWeek } = useWeekContext();
-  const { message, type } = useToastContext();
-  const { theme } = useTheme();
-  const { delay } = useDelay();
-  const { width: screenWidth } = useWindowDimensions();
-  const { allChecklists, editMode, editText, newChecklistContent, isDragging,prevSelectedWeek,selectedChecklists,
-          createChecklist, updateChecklistChanges, deleteChecklist, recoveryUndoChecklist, onSubmitUpdateContent,
-          setEditMode,  onChangeEditText,  onChangeNewChecklistContent, onFocusUpdateInput, onFocusCreateInput,
-          onChangePrevSelectedWeek, setSelectedChecklist,setIsDragging } = useChecklists();
+  const {selectedWeek} = useWeekContext();
+  const {message, type} = useToastContext();
+  const {theme} = useTheme();
+  const {delay} = useDelay();
+  const {width: screenWidth} = useWindowDimensions();
+  const {
+    allChecklists,
+    editMode,
+    editText,
+    newChecklistContent,
+    isDragging,
+    prevSelectedWeek,
+    selectedChecklists,
+    createChecklist,
+    updateChecklistChanges,
+    deleteChecklist,
+    recoveryUndoChecklist,
+    onSubmitUpdateContent,
+    setEditMode,
+    onChangeEditText,
+    onChangeNewChecklistContent,
+    onFocusUpdateInput,
+    onFocusCreateInput,
+    onChangePrevSelectedWeek,
+    setSelectedChecklist,
+    setIsDragging,
+  } = useChecklists();
 
   const tabsToCenter = useCallback(
     (tabIndex: number) => {
       weekTabsRef.current?.scrollToOffset({
         offset:
-          (itemWidth + itemSpacing) * (tabIndex - 1)
-          - screenWidth / 2
-          + itemWidth / 2
-          + flatlistPadding,
+          (itemWidth + itemSpacing) * (tabIndex - 1) -
+          screenWidth / 2 +
+          itemWidth / 2 +
+          flatlistPadding,
         animated: true,
       });
-    },[screenWidth]);
+    },
+    [screenWidth],
+  );
 
   useEffect(() => {
     tabsToCenter(selectedWeek);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     const keyboardDismissListener = Keyboard.addListener(
       'keyboardDidHide',
-      () => setEditMode('await'))
-    return () => keyboardDismissListener.remove();  
-  },[])
+      () => setEditMode('await'),
+    );
+    return () => keyboardDismissListener.remove();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    if(editMode === 'create') createChecklistRef.current?.focus();
-    else if(editMode === 'update') updateChecklistInputRef.current?.focus();
-  },[editMode])
+    if (editMode === 'create') {
+      createChecklistRef.current?.focus();
+    } else if (editMode === 'update') {
+      updateChecklistInputRef.current?.focus();
+    }
+  }, [editMode]);
 
   useEffect(() => {
-    if(!allChecklists || isDragging) return;
-    delay(() => setSelectedChecklist(allChecklists[selectedWeek]),500)
-  },[allChecklists,selectedWeek,isDragging])
+    if (!allChecklists || isDragging) {
+      return;
+    }
+    delay(() => setSelectedChecklist(allChecklists[selectedWeek]), 500);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allChecklists, selectedWeek, isDragging]);
 
   return (
     <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
-
       {/* Tabs Buttons */}
-      <WeekTabs ref={weekTabsRef} tabsToCenter={tabsToCenter} setIsDragging={setIsDragging} />
+      <WeekTabs
+        ref={weekTabsRef}
+        tabsToCenter={tabsToCenter}
+        setIsDragging={setIsDragging}
+      />
 
       {/* Checklist with animation */}
 
@@ -75,53 +114,60 @@ const ChecklistsScreen = () => {
         isDragging={isDragging}
         selectedWeek={selectedWeek}
         prevSelectedWeek={prevSelectedWeek}
-        onChangePrevSelectedWeek={onChangePrevSelectedWeek}
-      >
-      <Checklist
-        checklists={selectedChecklists}
-        updateChecklistChanges={updateChecklistChanges}
-        onFocusInput={ onFocusUpdateInput}
-        deleteChecklist={deleteChecklist}
-      />
-
+        onChangePrevSelectedWeek={onChangePrevSelectedWeek}>
+        <Checklist
+          checklists={selectedChecklists}
+          updateChecklistChanges={updateChecklistChanges}
+          onFocusInput={onFocusUpdateInput}
+          deleteChecklist={deleteChecklist}
+        />
       </SideSlideAnimationView>
 
       {/* Delete Checklist Toast */}
-      {message && <Toast message={message} type={type} undoCallback={recoveryUndoChecklist} />}  
+      {message && (
+        <Toast
+          message={message}
+          type={type}
+          undoCallback={recoveryUndoChecklist}
+        />
+      )}
 
       {/* Floating Add Checklist Button */}
-      <FloatingAddChecklistButton onFocusCreateInput={onFocusCreateInput}/>
+      <FloatingAddChecklistButton onFocusCreateInput={onFocusCreateInput} />
 
       {/* Update & Create Checklist Bottom Up Input */}
-      {
-        editMode === 'create' &&
+      {editMode === 'create' && (
         <BottomUpSlideComponent onSubmit={createChecklist}>
           <TextInput
             ref={createChecklistRef}
-            style={[ styles.input, {borderColor: theme.lightGrey, fontSize: theme.textXS}]}
+            style={[
+              styles.input,
+              {borderColor: theme.lightGrey, fontSize: theme.textXS},
+            ]}
             value={newChecklistContent + ''}
-            placeholder='체크리스트를 입력해주세요'
+            placeholder="체크리스트를 입력해주세요"
             onChangeText={onChangeNewChecklistContent}
             selectionColor={theme.accent}
-            keyboardType='default'
+            keyboardType="default"
           />
         </BottomUpSlideComponent>
-      }
-      {
-        editMode === 'update' &&
+      )}
+      {editMode === 'update' && (
         <BottomUpSlideComponent onSubmit={onSubmitUpdateContent}>
           <TextInput
             ref={updateChecklistInputRef}
-            style={[styles.input,{borderColor: theme.lightGrey, fontSize: theme.textXS}]}
+            style={[
+              styles.input,
+              {borderColor: theme.lightGrey, fontSize: theme.textXS},
+            ]}
             value={editText + ''}
-            placeholder='수정할 내용을 입력해주세요'
+            placeholder="수정할 내용을 입력해주세요"
             onChangeText={onChangeEditText}
             selectionColor={theme.accent}
-            keyboardType='default'
-
+            keyboardType="default"
           />
-       </BottomUpSlideComponent>
-      }
+        </BottomUpSlideComponent>
+      )}
     </View>
   );
 };

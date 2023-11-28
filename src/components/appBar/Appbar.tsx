@@ -12,8 +12,11 @@ interface Props {
 }
 
 const getStatusBarHeight = () => {
-  if (Platform.OS === 'android') return StatusBar.currentHeight || 0;
-  else if (Platform.OS === 'ios') return StatusBar.currentHeight || 20;
+  if (Platform.OS === 'android') {
+    return StatusBar.currentHeight || 0;
+  } else if (Platform.OS === 'ios') {
+    return StatusBar.currentHeight || 20;
+  }
   return 0;
 };
 
@@ -31,16 +34,15 @@ const Appbar = ({name}: Props) => {
         },
       ]}>
       <View style={styles.titleBox}>
-        {navigation.canGoBack()
-        ? (
+        {navigation.canGoBack() ? (
           <>
             <BackButton />
             <NavigationTitle name={name} />
             <EditButton />
           </>
-        ) : 
+        ) : (
           <NavigationTitle name={name} />
-        }
+        )}
       </View>
     </View>
   );

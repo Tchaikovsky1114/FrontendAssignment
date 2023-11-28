@@ -1,31 +1,39 @@
-import React, {PropsWithChildren, useEffect, useState} from 'react';
-import { ActivityIndicator, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
+import React, {PropsWithChildren, useState} from 'react';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+} from 'react-native';
 import Upload from '../../assets/icons/Upload.svg';
 import useKeyboardHeight from '../../hooks/useKeyboardHeight';
 import Animated from 'react-native-reanimated';
-import { useTheme } from '../../context/ThemeProvider';
+import {useTheme} from '../../context/ThemeProvider';
+import useDelay from '../../hooks/useDelay';
 
 interface Props {
   onSubmit: () => void;
 }
-const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
-const BottomUpSlideComponent = ({onSubmit,children}:PropsWithChildren<Props>) => {
+const BottomUpSlideComponent = ({
+  onSubmit,
+  children,
+}: PropsWithChildren<Props>) => {
   const {width} = useWindowDimensions();
   const {theme} = useTheme();
+  const {delay} = useDelay();
   const {keyboardHeight, animatedStyle} = useKeyboardHeight({
     additionalHeight: 64,
   });
   const [fakeLoading, setFakeLoading] = useState(false);
 
-  useEffect(() => {
-    if(!fakeLoading) return;
-
-    const flag = setTimeout(() => {
-      setFakeLoading(false)
-    },1000)
-    return () => clearTimeout(flag)
-  },[fakeLoading])
+  const onPressSubmit = () => {
+    onSubmit();
+    setFakeLoading(true);
+    delay(() => {
+      setFakeLoading(false);
+    }, 1000);
+  };
 
   return (
     <Animated.View
@@ -34,25 +42,18 @@ const BottomUpSlideComponent = ({onSubmit,children}:PropsWithChildren<Props>) =>
         animatedStyle,
         /* eslint-disable react-native/no-inline-styles */
         {width, bottom: keyboardHeight ? 0 : -100},
-      ]}
-      >
-        {children}
-      <AnimatedTouchable
-        onPress={() => {
-          onSubmit();
-          setFakeLoading(true);
-        }}
-        style={styles.submitButton}>
-          {
-            fakeLoading
-            ? <ActivityIndicator color={theme.grey} size="small" />
-            : <Upload width={32} height={32} fill={theme.accent} />
-          }
-      </AnimatedTouchable>
+      ]}>
+      {children}
+      <TouchableOpacity onPress={onPressSubmit} style={styles.submitButton}>
+        {fakeLoading ? (
+          <ActivityIndicator color={theme.grey} size="small" />
+        ) : (
+          <Upload width={32} height={32} fill={theme.accent} />
+        )}
+      </TouchableOpacity>
     </Animated.View>
-    
   );
-}
+};
 
 export default BottomUpSlideComponent;
 
@@ -65,7 +66,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
-
   submitButton: {
     position: 'absolute',
     alignItems: 'center',
@@ -74,6 +74,6 @@ const styles = StyleSheet.create({
     height: 42,
     borderRadius: 12,
     right: 20,
-    top: 12
+    top: 12,
   },
 });

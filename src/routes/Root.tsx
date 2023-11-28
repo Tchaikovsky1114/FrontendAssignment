@@ -11,6 +11,7 @@ const Stack = createNativeStackNavigator();
 
 const Root = () => {
   const {theme} = useTheme();
+
   return (
     <>
       <StatusBar
@@ -25,9 +26,7 @@ const Root = () => {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Checklists" component={ChecklistsScreen} />
       </Stack.Navigator>
-      
     </>
-
   );
 };
 

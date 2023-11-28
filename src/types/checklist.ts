@@ -10,4 +10,4 @@ export interface NewChecklist extends DefaultChecklist {
 
 export interface AllChecklists {
   [key: DefaultChecklist['weekNumber']]: NewChecklist[];
-  }
+}

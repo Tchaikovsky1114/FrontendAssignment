@@ -7,8 +7,6 @@ import React, {
 } from 'react';
 import {LightTheme, DarkTheme, Theme} from '../styles/theme';
 
-
-
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
 const defaultTheme: Theme = new LightTheme();
@@ -42,7 +40,7 @@ export const ThemeProvider: FC<ThemeProviderProps> = ({children}) => {
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error('Theme Context Error: Provider의 위치를 확인해주세요');
   }
   return context;
 };

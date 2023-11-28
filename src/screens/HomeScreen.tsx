@@ -1,4 +1,4 @@
-import {Keyboard,StyleSheet,TextInput,View} from 'react-native';
+import {Keyboard, StyleSheet, TextInput, View} from 'react-native';
 import React, {useCallback, useRef} from 'react';
 import {useTheme} from '../context/ThemeProvider';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -21,59 +21,64 @@ const HomeScreen = ({navigation}: Props) => {
 
   const navigateToChecklists = useCallback(() => {
     navigation.navigate('Checklists');
-  },[]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const onToggleTheme =  useCallback(() => {
+  const onToggleTheme = useCallback(() => {
     toggleTheme();
-  },[]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onClickFocusInput = useCallback(() => {
     inputRef.current?.focus();
-  },[]);
+  }, []);
 
   const onSubmitSelectedWeek = useCallback(() => {
-    if(!week) return;
+    if (!week) {
+      return;
+    }
     selectWeek(week);
     delay(() => {
       Keyboard.dismiss();
-    },1000)
-    
-  },[week]);
+    }, 1000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [week]);
 
   const onChangeWeek = useCallback((weekCount: string) => {
-    if ( +weekCount > 40) return;
-    
+    if (+weekCount > 40) {
+      return;
+    }
+
     onChange(weekCount);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-      <View
-        style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
-        <SettingButton
-          onPress={onClickFocusInput}
-          buttonText="시작 주 변경하기"
+    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
+      <SettingButton
+        onPress={onClickFocusInput}
+        buttonText="시작 주 변경하기"
+      />
+      <SettingButton
+        onPress={navigateToChecklists}
+        buttonText="체크리스트로 이동"
+      />
+      <SettingButton onPress={onToggleTheme} buttonText="다크모드 변경" />
+      <BottomUpSlideComponent onSubmit={onSubmitSelectedWeek}>
+        <TextInput
+          ref={inputRef}
+          style={[
+            styles.input,
+            {borderColor: theme.lightGrey, fontSize: theme.textXS},
+          ]}
+          value={week + ''}
+          placeholder="체크리스트를 입력해주세요"
+          onChangeText={onChangeWeek}
+          selectionColor={theme.accent}
+          keyboardType="numeric"
         />
-        <SettingButton
-          onPress={navigateToChecklists}
-          buttonText="체크리스트로 이동"
-        />
-        <SettingButton onPress={onToggleTheme} buttonText="다크모드 변경" />
-        <BottomUpSlideComponent onSubmit={onSubmitSelectedWeek}>
-            <TextInput
-              ref={inputRef}
-              style={[
-                styles.input,
-                {borderColor: theme.lightGrey, fontSize: theme.textXS},
-              ]}
-              value={week + ''}
-              placeholder='체크리스트를 입력해주세요'
-              onChangeText={onChangeWeek}
-              selectionColor={theme.accent}
-              keyboardType='numeric'
-            />
       </BottomUpSlideComponent>
-      </View>
+    </View>
   );
 };
 

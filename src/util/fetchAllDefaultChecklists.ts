@@ -1,8 +1,8 @@
-import { AllChecklists, DefaultChecklist } from "../types/checklist";
+import {AllChecklists, DefaultChecklist} from '../types/checklist';
 
 export const fetchAllDefaultChecklists = () => {
   const defaultChecklist: DefaultChecklist[] = require('../../checklist_seeds.json');
-  
+
   const allChecklists = defaultChecklist.reduce((acc, cur) => {
     const weekNumber = cur.weekNumber;
     if (!acc[weekNumber]) {
@@ -15,6 +15,6 @@ export const fetchAllDefaultChecklists = () => {
     });
     return acc;
   }, {} as AllChecklists);
-  
+
   return allChecklists;
 };

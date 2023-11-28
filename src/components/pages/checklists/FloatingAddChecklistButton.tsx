@@ -1,24 +1,22 @@
-import React, { memo } from 'react'
+import React, {memo} from 'react';
 import PlusIcon from '../../../assets/icons/Plus.svg';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 
 interface Props {
   onFocusCreateInput: () => void;
 }
 
-const FloatingAddChecklistButton = ({onFocusCreateInput}:Props) => {
+const FloatingAddChecklistButton = ({onFocusCreateInput}: Props) => {
   return (
     <TouchableOpacity
-        style={styles.floatingButton}
-        onPress={onFocusCreateInput}
-      >
-        <PlusIcon width={52} height={52} />
-      </TouchableOpacity>
-  )
-}
+      style={styles.floatingButton}
+      onPress={onFocusCreateInput}>
+      <PlusIcon width={52} height={52} />
+    </TouchableOpacity>
+  );
+};
 
 export default memo(FloatingAddChecklistButton);
-
 
 const styles = StyleSheet.create({
   floatingButton: {
@@ -32,4 +30,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-})
+});

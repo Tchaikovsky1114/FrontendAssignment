@@ -17,7 +17,10 @@ const WeekTabButton = ({item, onPress}: Props) => {
       onPress={() => onPress(item)}
       style={[
         styles.weekCard,
-        { backgroundColor: selectedWeek === item ? theme.accent : theme.dirtyWhite },
+        {
+          backgroundColor:
+            selectedWeek === item ? theme.accent : theme.dirtyWhite,
+        },
       ]}>
       <Text
         style={[

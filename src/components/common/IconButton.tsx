@@ -1,28 +1,23 @@
-import { TouchableWithoutFeedback, TouchableOpacity } from 'react-native'
-import React from 'react'
-import { SvgProps } from 'react-native-svg'
+import {TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
+import React from 'react';
+import {SvgProps} from 'react-native-svg';
 
 interface Props {
-  Icon: React.ReactElement<SvgProps>
-  onPress: () => void
-  withFeedback?: boolean
+  Icon: React.ReactElement<SvgProps>;
+  onPress: () => void;
+  withFeedback?: boolean;
 }
 
-const IconButton = ({Icon, onPress,withFeedback}: Props) => {
-  if(withFeedback) {
+const IconButton = ({Icon, onPress, withFeedback}: Props) => {
+  if (withFeedback) {
     return (
       <TouchableWithoutFeedback onPress={onPress}>
         {Icon}
-      </TouchableWithoutFeedback> 
-    )
+      </TouchableWithoutFeedback>
+    );
   } else {
-    return (
-      <TouchableOpacity onPress={onPress}>
-        {Icon}
-      </TouchableOpacity>
-    )
+    return <TouchableOpacity onPress={onPress}>{Icon}</TouchableOpacity>;
   }
-  
-}
+};
 
-export default IconButton
+export default IconButton;

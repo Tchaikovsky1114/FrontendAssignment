@@ -1,5 +1,5 @@
 import {Text, TouchableOpacity, StyleSheet} from 'react-native';
-import React, { memo } from 'react';
+import React, {memo} from 'react';
 import {useTheme} from '../../../context/ThemeProvider';
 
 interface Props {

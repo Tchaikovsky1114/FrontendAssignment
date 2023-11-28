@@ -1,10 +1,13 @@
-import { View, StyleSheet, useWindowDimensions, FlatList } from 'react-native'
-import React, { forwardRef } from 'react'
+import {View, StyleSheet, FlatList} from 'react-native';
+import React, {forwardRef} from 'react';
 import ListSeparator from '../../common/ListSeparator';
 import WeekTabButton from './WeekTabButton';
-import { useWeekContext } from '../../../context/WeekProvider';
-import { flatlistPadding, itemSpacing, itemWidth } from '../../../screens/ChecklistsScreen';
-
+import {useWeekContext} from '../../../context/WeekProvider';
+import {
+  flatlistPadding,
+  itemSpacing,
+  itemWidth,
+} from '../../../screens/ChecklistsScreen';
 
 interface Props {
   tabsToCenter: (tabIndex: number) => void;
@@ -13,19 +16,19 @@ interface Props {
 
 const Separator = () => <ListSeparator width={8} />;
 
-const WeekTabs = forwardRef<FlatList,Props>(({ setIsDragging, tabsToCenter }, ref) => {  
-  const {selectWeek} = useWeekContext();
-  
-  const onDragStart = () => {
-    setIsDragging(true);
-  }
-  const onDragEnd = () => {
-    setIsDragging(false);
-  }
+const WeekTabs = forwardRef<FlatList, Props>(
+  ({setIsDragging, tabsToCenter}, ref) => {
+    const {selectWeek} = useWeekContext();
 
-  
-  return (
-    <View style={styles.tabsWrapper}>
+    const onDragStart = () => {
+      setIsDragging(true);
+    };
+    const onDragEnd = () => {
+      setIsDragging(false);
+    };
+
+    return (
+      <View style={styles.tabsWrapper}>
         <FlatList
           ref={ref}
           horizontal
@@ -47,7 +50,7 @@ const WeekTabs = forwardRef<FlatList,Props>(({ setIsDragging, tabsToCenter }, re
             offset: 62 * index,
             index,
           })}
-          contentContainerStyle={{ paddingHorizontal: flatlistPadding }}
+          contentContainerStyle={{paddingHorizontal: flatlistPadding}}
           onScroll={({nativeEvent}) => {
             const index = Math.round(
               nativeEvent.contentOffset.x / (itemWidth + itemSpacing),
@@ -56,11 +59,11 @@ const WeekTabs = forwardRef<FlatList,Props>(({ setIsDragging, tabsToCenter }, re
           }}
         />
       </View>
-  )
-})
+    );
+  },
+);
 
 export default WeekTabs;
-
 
 const styles = StyleSheet.create({
   container: {
