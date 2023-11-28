@@ -19,7 +19,7 @@ const Checklist = ({
   onFocusInput,
 }: Props) => {
   const {width} = useWindowDimensions();
-  const completedChecklistCount = checklists.filter(
+  const completedChecklistCount = checklists?.filter(
     checklist => checklist.isCompleted,
   ).length;
 
@@ -50,7 +50,7 @@ const Checklist = ({
   );
 
   const listHeader =
-    checklists.length > 0 ? (
+    checklists?.length > 0 ? (
       <ProgressBarComponent
         completedCount={completedChecklistCount}
         inCompletedCount={checklists.length}

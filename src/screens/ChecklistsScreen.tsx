@@ -1,10 +1,10 @@
 import {
-  View,
   StyleSheet,
   FlatList,
   useWindowDimensions,
   Keyboard,
   TextInput,
+  SafeAreaView,
 } from 'react-native';
 import React, {useCallback, useEffect, useRef} from 'react';
 import {useTheme} from '../context/ThemeProvider';
@@ -100,7 +100,8 @@ const ChecklistsScreen = () => {
   }, [allChecklists, selectedWeek, isDragging]);
 
   return (
-    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
+    <SafeAreaView
+      style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       {/* Tabs Buttons */}
       <WeekTabs
         ref={weekTabsRef}
@@ -168,7 +169,7 @@ const ChecklistsScreen = () => {
           />
         </BottomUpSlideComponent>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -322,7 +322,7 @@ const ProgressBarComponent = useCallback(({ completedCount, inCompletedCount }: 
     return <ProgressBar completedCount={completedCount} inCompletedCount={inCompletedCount} />
   },[checklists])
 
-  const listHeader = checklists.length > 0
+  const listHeader = checklists?.length > 0
         ? <ProgressBarComponent completedCount={completedChecklistCount} inCompletedCount={checklists.length} />
         : null;
 
