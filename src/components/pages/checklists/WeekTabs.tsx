@@ -55,6 +55,9 @@ const WeekTabs = forwardRef<FlatList, Props>(
             const index = Math.round(
               nativeEvent.contentOffset.x / (itemWidth + itemSpacing),
             );
+            if (index < 0 || index > 39) {
+              return;
+            }
             selectWeek(index + 1);
           }}
         />
