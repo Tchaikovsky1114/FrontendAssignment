@@ -2,6 +2,7 @@ import {Text, StyleSheet, Pressable} from 'react-native';
 import React, {memo} from 'react';
 import {useTheme} from '../../../context/ThemeProvider';
 import {useWeekContext} from '../../../context/WeekProvider';
+import {itemWidth} from '../../../screens/ChecklistsScreen';
 
 interface Props {
   item: number;
@@ -18,6 +19,9 @@ const WeekTabButton = ({item, onPress}: Props) => {
       style={[
         styles.weekCard,
         {
+          width: itemWidth,
+          height: itemWidth * 1.24,
+          borderRadius: itemWidth * 0.5,
           backgroundColor:
             selectedWeek === item ? theme.accent : theme.dirtyWhite,
         },
@@ -52,11 +56,9 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   weekCard: {
-    width: 50,
-    height: 62,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 50,
+
     paddingTop: 4,
   },
 });

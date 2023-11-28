@@ -1,4 +1,4 @@
-import {View, StyleSheet, FlatList} from 'react-native';
+import {View, FlatList} from 'react-native';
 import React, {forwardRef} from 'react';
 import ListSeparator from '../../common/ListSeparator';
 import WeekTabButton from './WeekTabButton';
@@ -28,7 +28,10 @@ const WeekTabs = forwardRef<FlatList, Props>(
     };
 
     return (
-      <View style={styles.tabsWrapper}>
+      <View
+        style={{
+          height: itemWidth * 1.56,
+        }}>
         <FlatList
           ref={ref}
           horizontal
@@ -67,19 +70,3 @@ const WeekTabs = forwardRef<FlatList, Props>(
 );
 
 export default WeekTabs;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  tabsWrapper: {
-    height: 72,
-  },
-  tabButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

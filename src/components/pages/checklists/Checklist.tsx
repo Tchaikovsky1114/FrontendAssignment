@@ -45,8 +45,8 @@ const Checklist = ({
         />
       );
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [checklists],
+
+    [],
   );
 
   const listHeader =

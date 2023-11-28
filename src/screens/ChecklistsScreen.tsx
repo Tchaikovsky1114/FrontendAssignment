@@ -1,10 +1,10 @@
 import {
   StyleSheet,
   FlatList,
-  useWindowDimensions,
+  // useWindowDimensions,
   Keyboard,
   TextInput,
-  SafeAreaView,
+  Dimensions,
 } from 'react-native';
 import React, {useCallback, useEffect, useRef} from 'react';
 import {useTheme} from '../context/ThemeProvider';
@@ -18,11 +18,17 @@ import SideSlideAnimationView from '../components/common/SideSlideAnimationView'
 import useChecklists from '../hooks/useChecklists';
 import WeekTabs from '../components/pages/checklists/WeekTabs';
 import FloatingAddChecklistButton from '../components/pages/checklists/FloatingAddChecklistButton';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
-export const itemWidth = 50; // item width
+const {width: screenWidth} = Dimensions.get('window');
+
+export const itemWidth = screenWidth / 7; // item width
 export const itemSpacing = 8; // gap
-export const flatlistPadding = 150; // flatlist padding
+export const flatlistPadding = itemWidth * 3; // flatlist padding
 
+console.log('itemWidth', itemWidth);
+console.log('itemSpacing', itemSpacing);
+console.log('flatlistPadding', flatlistPadding);
 const ChecklistsScreen = () => {
   const weekTabsRef = useRef<FlatList>(null);
   const createChecklistRef = useRef<TextInput | null>(null);
@@ -31,7 +37,7 @@ const ChecklistsScreen = () => {
   const {message, type} = useToastContext();
   const {theme} = useTheme();
   const {delay} = useDelay();
-  const {width: screenWidth} = useWindowDimensions();
+
   const {
     allChecklists,
     editMode,
@@ -55,19 +61,16 @@ const ChecklistsScreen = () => {
     setIsDragging,
   } = useChecklists();
 
-  const tabsToCenter = useCallback(
-    (tabIndex: number) => {
-      weekTabsRef.current?.scrollToOffset({
-        offset:
-          (itemWidth + itemSpacing) * (tabIndex - 1) -
-          screenWidth / 2 +
-          itemWidth / 2 +
-          flatlistPadding,
-        animated: true,
-      });
-    },
-    [screenWidth],
-  );
+  const tabsToCenter = useCallback((tabIndex: number) => {
+    weekTabsRef.current?.scrollToOffset({
+      offset:
+        (itemWidth + itemSpacing) * (tabIndex - 1) -
+        screenWidth / 2 +
+        itemWidth / 2 +
+        flatlistPadding,
+      animated: true,
+    });
+  }, []);
 
   useEffect(() => {
     tabsToCenter(selectedWeek);

@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {useTheme} from '../../context/ThemeProvider';
 
 interface Props {
@@ -8,23 +8,30 @@ interface Props {
 
 function NavigationTItle({name}: Props) {
   const {theme} = useTheme();
+
   return (
-    <Text
-      style={[styles.bold, {color: theme.textColor, fontSize: theme.textBase}]}>
-      {name}
-    </Text>
+    <View style={styles.container}>
+      <Text
+        style={[
+          styles.bold,
+          {color: theme.textColor, fontSize: theme.textBase},
+        ]}>
+        {name}
+      </Text>
+    </View>
   );
 }
 
 export default NavigationTItle;
 
 const styles = StyleSheet.create({
-  titleBox: {
-    position: 'relative',
+  container: {
+    position: 'absolute',
     flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   bold: {
-    fontWeight: '700',
+    fontWeight: 'bold',
   },
 });

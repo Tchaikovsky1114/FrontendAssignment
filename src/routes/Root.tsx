@@ -21,10 +21,22 @@ const Root = () => {
       />
       <Stack.Navigator
         screenOptions={{
-          header: props => Appbar({name: props.route.name}),
+          header: props => <Appbar name={props.route.name} />,
         }}>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Checklists" component={ChecklistsScreen} />
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            title: 'Home',
+          }}
+        />
+        <Stack.Screen
+          name="Checklists"
+          component={ChecklistsScreen}
+          options={{
+            title: 'Checklists',
+          }}
+        />
       </Stack.Navigator>
     </>
   );

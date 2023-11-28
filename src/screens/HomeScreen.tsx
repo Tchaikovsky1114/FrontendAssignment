@@ -1,4 +1,4 @@
-import {Keyboard, StyleSheet, TextInput, View} from 'react-native';
+import {Keyboard, StyleSheet, TextInput} from 'react-native';
 import React, {useCallback, useRef} from 'react';
 import {useTheme} from '../context/ThemeProvider';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -7,6 +7,7 @@ import BottomUpSlideComponent from '../components/common/BottomUpSlideComponent'
 import useInput from '../hooks/useInput';
 import {useWeekContext} from '../context/WeekProvider';
 import useDelay from '../hooks/useDelay';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 interface Props {
   navigation: NativeStackNavigationProp<any, any>;
@@ -45,7 +46,7 @@ const HomeScreen = ({navigation}: Props) => {
   }, [week]);
 
   const onChangeWeek = useCallback((weekCount: string) => {
-    if (+weekCount > 40 || +weekCount < 1) {
+    if (+weekCount > 40) {
       return;
     }
 
@@ -54,7 +55,8 @@ const HomeScreen = ({navigation}: Props) => {
   }, []);
 
   return (
-    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
+    <SafeAreaView
+      style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <SettingButton
         onPress={onClickFocusInput}
         buttonText="시작 주 변경하기"
@@ -78,7 +80,7 @@ const HomeScreen = ({navigation}: Props) => {
           keyboardType="numeric"
         />
       </BottomUpSlideComponent>
-    </View>
+    </SafeAreaView>
   );
 };
 

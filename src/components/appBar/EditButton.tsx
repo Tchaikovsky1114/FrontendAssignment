@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
   editButton: {
     position: 'absolute',
     right: 0,
-    top: 0,
     marginRight: 16,
   },
 });
