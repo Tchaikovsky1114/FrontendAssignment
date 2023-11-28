@@ -17,7 +17,7 @@
 
 # Issue & Solve
 
-## A. Bottom에서 올라오는 애니메이션을 만들 때 부딪힌 어려움
+## A. Animation
 
 1. Bottom Up Slide Animation
 `KeyboardAvoidingView`를 사용하면 `keyboardVerticalOffset`의 값을 하드코딩으로 넣어 맞춰야 해서 다양한 기기에서 정확한 값을 구현하기 어려웠습니다.<br/>
