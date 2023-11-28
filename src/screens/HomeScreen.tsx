@@ -45,7 +45,7 @@ const HomeScreen = ({navigation}: Props) => {
   }, [week]);
 
   const onChangeWeek = useCallback((weekCount: string) => {
-    if (+weekCount > 40) {
+    if (+weekCount > 40 || +weekCount < 1) {
       return;
     }
 
