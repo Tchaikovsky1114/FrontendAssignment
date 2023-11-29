@@ -20,12 +20,10 @@ export const ToastProvider = ({children}: PropsWithChildren) => {
   const [toastQueue, setToastQueue] = useState<ToastMessage[]>([]);
 
   const addToastQueue = useCallback((msg: ToastMessage) => {
-    console.log('excuting addToastQueue', msg);
     setToastQueue(prev => [...prev, msg]);
   }, []);
 
   const removeToastQueue = useCallback(() => {
-    console.log('excuting removeToastQueue');
     setToastQueue(prev => prev.slice(1));
   }, []);
 

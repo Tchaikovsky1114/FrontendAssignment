@@ -25,7 +25,6 @@ const ChecklisItem = ({
   const {theme} = useTheme();
 
   const onPressDeleteButton = useCallback(() => {
-    console.log('ChecklistItem.tsx: onPressDeleteButton');
     deleteChecklist(checklist);
   }, [checklist, deleteChecklist]);
   return (

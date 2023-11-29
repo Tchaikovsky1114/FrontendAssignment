@@ -70,7 +70,6 @@ const ChecklistsScreen = () => {
     });
   }, []);
 
-  console.log('ChecklistsScreen: toastQueue', toastQueue);
   useEffect(() => {
     tabsToCenter(selectedWeek);
     // eslint-disable-next-line react-hooks/exhaustive-deps
