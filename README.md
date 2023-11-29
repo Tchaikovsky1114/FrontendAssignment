@@ -478,7 +478,8 @@ const updateChecklistChanges = useCallback((newChecklist: NewChecklist) => {
 
 ### 선택
 
-첫 번째 방법을 선택한 이유는 불변성 유지와 확장성 측면에서의 안정성을 중시했기 때문입니다. <br/>
+저는 첫번째 방법을 선택하였습니다. <br/>
+그 이유는 불변성 유지와 확장성 측면에서의 안정성을 중시했기 때문입니다. <br/>
 
 1. 불변성의 확보 <br/>
 useMemo와 함께 깊은 복사를 통해 불변성을 확보하는데 주력했습니다. <br/>
