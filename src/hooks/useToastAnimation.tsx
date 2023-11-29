@@ -27,7 +27,7 @@ const useToastAnimation = () => {
 
   useEffect(() => {
     if (toastQueue && toastQueue.length > 0) {
-      positionY.value = withSpring(0, {
+      positionY.value = withSpring(-screenHeight * 0.05, {
         stiffness: 50,
       });
       delay(() => {
