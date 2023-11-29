@@ -13,12 +13,13 @@ import Checklist from '../components/pages/checklists/Checklist';
 import BottomUpSlideComponent from '../components/common/BottomUpSlideComponent';
 import useDelay from '../hooks/useDelay';
 import Toast from '../components/common/Toast';
-import {useToastContext} from '../context/ToastProvider';
 import SideSlideAnimationView from '../components/common/SideSlideAnimationView';
 import useChecklists from '../hooks/useChecklists';
 import WeekTabs from '../components/pages/checklists/WeekTabs';
 import FloatingAddChecklistButton from '../components/pages/checklists/FloatingAddChecklistButton';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {ToastType} from '../types/toast';
+import {useToastContext} from '../context/ToastProvider';
 
 const {width: screenWidth} = Dimensions.get('window');
 
@@ -31,7 +32,7 @@ const ChecklistsScreen = () => {
   const createChecklistRef = useRef<TextInput | null>(null);
   const updateChecklistInputRef = useRef<TextInput | null>(null);
   const {selectedWeek} = useWeekContext();
-  const {message, type} = useToastContext();
+  const {toastQueue} = useToastContext();
   const {theme} = useTheme();
   const {delay} = useDelay();
 
@@ -69,6 +70,7 @@ const ChecklistsScreen = () => {
     });
   }, []);
 
+  console.log('ChecklistsScreen: toastQueue', toastQueue);
   useEffect(() => {
     tabsToCenter(selectedWeek);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -124,14 +126,16 @@ const ChecklistsScreen = () => {
         />
       </SideSlideAnimationView>
 
-      {/* Delete Checklist Toast */}
-      {message && (
+      {/* Toast */}
+      {toastQueue.map(message => (
         <Toast
-          message={message}
-          type={type}
+          key={message.messageKey}
+          messageKey={message.messageKey}
+          message={message.message}
+          type={message.type as ToastType}
           undoCallback={recoveryUndoChecklist}
         />
-      )}
+      ))}
 
       {/* Floating Add Checklist Button */}
       <FloatingAddChecklistButton onFocusCreateInput={onFocusCreateInput} />

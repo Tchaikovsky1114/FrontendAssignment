@@ -25,7 +25,7 @@ export const EditProvider = ({children}: PropsWithChildren) => {
 
   const popUndoStack = useCallback(() => {
     const lastChecklist = undoStackRef.current[undoStackRef.current.length - 1];
-    undoStackRef.current = [];
+    undoStackRef.current.pop();
 
     return lastChecklist;
   }, []);

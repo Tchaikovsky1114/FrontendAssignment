@@ -1,5 +1,5 @@
 import {TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import {SvgProps} from 'react-native-svg';
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
   withFeedback?: boolean;
 }
 
-const IconButton = ({Icon, onPress, withFeedback}: Props) => {
+const IconButton = ({Icon, withFeedback, onPress}: Props) => {
   if (withFeedback) {
     return (
       <TouchableWithoutFeedback onPress={onPress}>
@@ -20,4 +20,4 @@ const IconButton = ({Icon, onPress, withFeedback}: Props) => {
   }
 };
 
-export default IconButton;
+export default memo(IconButton);

@@ -1,59 +1,29 @@
-import {
-  Text,
-  StyleSheet,
-  useWindowDimensions,
-  TouchableOpacity,
-} from 'react-native';
-import React, {useEffect} from 'react';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
+import {Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React from 'react';
+
 import {ToastType} from '../../types/toast';
 import {useTheme} from '../../context/ThemeProvider';
 import Reroll from '../../assets/icons/Reroll.svg';
-import useDelay from '../../hooks/useDelay';
-import {useToastContext} from '../../context/ToastProvider';
+
+import useToastAnimation from '../../hooks/useToastAnimation';
+import Animated from 'react-native-reanimated';
 
 interface Props {
-  message?: string;
-  type?: ToastType;
+  message: string;
+  messageKey: string;
+  type: ToastType;
   undoCallback: () => void;
 }
 
-const Toast = ({message, type, undoCallback}: Props) => {
-  const {height: screenHeight} = useWindowDimensions();
+const Toast = ({message, messageKey, type, undoCallback}: Props) => {
   const {theme} = useTheme();
-  const {delay} = useDelay();
-  const positionY = useSharedValue(screenHeight);
-  const {onChangeMessage} = useToastContext();
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: withSpring(positionY.value, {
-            stiffness: 50,
-          }),
-        },
-      ],
-    };
-  });
 
-  useEffect(() => {
-    if (message) {
-      positionY.value = 0;
-
-      delay(() => {
-        onChangeMessage('');
-        positionY.value = screenHeight;
-      }, 3000);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [message]);
+  const {toastAnimationStyle} = useToastAnimation();
 
   return (
-    <Animated.View style={[styles.container, animatedStyle]}>
+    <Animated.View
+      key={messageKey}
+      style={[styles.container, toastAnimationStyle]}>
       <Text style={{color: theme.white}}>{message}</Text>
       {type === ToastType.UNDO && (
         <TouchableOpacity style={styles.undoButton} onPress={undoCallback}>

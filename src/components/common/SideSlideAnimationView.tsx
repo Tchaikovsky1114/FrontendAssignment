@@ -46,7 +46,6 @@ const SideSlideAnimationView = ({
       return;
     }
 
-    // 바뀌기 전 상태로 SlideOut 애니메이션
     delay(() => {
       slideOutAnimation.value = withSequence(
         withTiming(0, {duration: 0}),
@@ -59,9 +58,7 @@ const SideSlideAnimationView = ({
 
     onChangePrevSelectedWeek(selectedWeek);
 
-    // 바뀐 상태로 카드가 안으로 들어옴
     delay(() => {
-      // onChangePrevSelectedWeek(selectedWeek);
       slideInAnimation.value = withSequence(
         withTiming(
           selectedWeek > prevSelectedWeek ? screenWidth : -screenWidth,

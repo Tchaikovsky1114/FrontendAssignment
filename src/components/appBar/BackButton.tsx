@@ -1,5 +1,5 @@
 import {Text, TouchableOpacity, StyleSheet} from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../context/ThemeProvider';
 
@@ -15,7 +15,7 @@ const BackButton = () => {
   );
 };
 
-export default BackButton;
+export default memo(BackButton);
 
 const styles = StyleSheet.create({
   backButton: {

@@ -21,7 +21,7 @@ const Root = () => {
       />
       <Stack.Navigator
         screenOptions={{
-          header: props => <Appbar name={props.route.name} />,
+          header: props => Appbar({name: props.route.name}),
         }}>
         <Stack.Screen
           name="Home"

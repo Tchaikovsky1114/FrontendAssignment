@@ -3,34 +3,39 @@ import React, {
   useCallback,
   useContext,
   useMemo,
+  useState,
 } from 'react';
-import {createContext, useState} from 'react';
-import {ToastType} from '../types/toast';
+import {createContext} from 'react';
+import {ToastMessage} from '../types/toast';
 
 interface ToastContextProps {
-  message: string;
-  type: ToastType;
-  onChangeMessage: (message: string) => void;
-  onChangeType: (type: ToastType) => void;
+  toastQueue: ToastMessage[];
+  addToastQueue: (message: ToastMessage) => void;
+  removeToastQueue: () => void;
 }
 
 const ToastContext = createContext<ToastContextProps | undefined>(undefined);
 
 export const ToastProvider = ({children}: PropsWithChildren) => {
-  const [message, setMessage] = useState<string>('');
-  const [type, setType] = useState<ToastType>(ToastType.NOTICE);
+  const [toastQueue, setToastQueue] = useState<ToastMessage[]>([]);
 
-  const onChangeMessage = useCallback((msg: string) => {
-    setMessage(msg);
+  const addToastQueue = useCallback((msg: ToastMessage) => {
+    console.log('excuting addToastQueue', msg);
+    setToastQueue(prev => [...prev, msg]);
   }, []);
-  const onChangeType = useCallback((toastType: ToastType) => {
-    setType(toastType);
+
+  const removeToastQueue = useCallback(() => {
+    console.log('excuting removeToastQueue');
+    setToastQueue(prev => prev.slice(1));
   }, []);
 
   const contextValue: ToastContextProps = useMemo(
-    () => ({message, type, onChangeMessage, onChangeType}),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [message, type],
+    () => ({
+      toastQueue,
+      addToastQueue,
+      removeToastQueue,
+    }),
+    [addToastQueue, removeToastQueue, toastQueue],
   );
 
   return (

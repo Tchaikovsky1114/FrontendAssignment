@@ -2,9 +2,7 @@ import React, {useCallback} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import IconButton from '../../common/IconButton';
 import {NewChecklist} from '../../../types/checklist';
-import {useToastContext} from '../../../context/ToastProvider';
 import {useEditContext} from '../../../context/EditProvider';
-import {ToastType} from '../../../types/toast';
 import {useTheme} from '../../../context/ThemeProvider';
 import Checked from '../../../assets/icons/Checked.svg';
 import UnChecked from '../../../assets/icons/Unchecked.svg';
@@ -25,14 +23,11 @@ const ChecklisItem = ({
 }: Props) => {
   const {isEdit} = useEditContext();
   const {theme} = useTheme();
-  const {onChangeMessage, onChangeType} = useToastContext();
 
   const onPressDeleteButton = useCallback(() => {
+    console.log('ChecklistItem.tsx: onPressDeleteButton');
     deleteChecklist(checklist);
-    onChangeMessage('Checklist deleted');
-    onChangeType(ToastType.UNDO);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [checklist]);
+  }, [checklist, deleteChecklist]);
   return (
     <TouchableOpacity
       key={checklist.id}

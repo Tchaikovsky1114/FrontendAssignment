@@ -6,14 +6,15 @@ import {useEditContext} from '../context/EditProvider';
 import useInput from './useInput';
 import {useWeekContext} from '../context/WeekProvider';
 import {fetchAllDefaultChecklists} from '../util/fetchAllDefaultChecklists';
-import {useToastContext} from '../context/ToastProvider';
 import {deepCopy} from '../util/deepCopy';
+import {useToastContext} from '../context/ToastProvider';
+import {ToastType} from '../types/toast';
 
 const useChecklists = () => {
   const {delay} = useDelay();
   const {isEdit, onChangeEdit, popUndoStack, pushUndoStack} = useEditContext();
   const {selectedWeek} = useWeekContext();
-  const {onChangeMessage} = useToastContext();
+  const {addToastQueue, removeToastQueue} = useToastContext();
   const [allChecklists, setAllChecklists] = useState<AllChecklists | null>(
     fetchAllDefaultChecklists(),
   );
@@ -27,7 +28,6 @@ const useChecklists = () => {
   );
   const [prevSelectedWeek, setPrevSelectedWeek] = useState(0);
   const {value: editText, onChange: onChangeEditText} = useInput();
-
   const {value: newChecklistContent, onChange: onChangeNewChecklistContent} =
     useInput('');
 
@@ -102,6 +102,12 @@ const useChecklists = () => {
       if (!mutableCopyChecklist) {
         return;
       }
+      addToastQueue({
+        message: 'Checklist deleted',
+        type: ToastType.UNDO,
+        messageKey: Date.now() + '',
+      });
+
       const weekNumber = checklist.weekNumber;
 
       const filteredChecklists = mutableCopyChecklist[weekNumber].filter(
@@ -114,7 +120,7 @@ const useChecklists = () => {
       pushUndoStack(checklist);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [mutableCopyChecklist, allChecklists],
+    [mutableCopyChecklist, addToastQueue, setAllChecklists],
   );
 
   /**
@@ -136,8 +142,9 @@ const useChecklists = () => {
       undoChecklist,
       ...mutableCopyChecklist[weekNumber],
     ];
+    removeToastQueue();
     setAllChecklists(mutableCopyChecklist);
-    onChangeMessage('');
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedWeek, mutableCopyChecklist]);
 
