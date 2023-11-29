@@ -39,9 +39,14 @@ const BottomUpSlideComponent = ({
     <Animated.View
       style={[
         styles.container,
+
         animatedStyle,
         /* eslint-disable react-native/no-inline-styles */
-        {width, bottom: keyboardHeight ? 0 : -100},
+        {
+          width,
+          bottom: keyboardHeight ? 0 : -100,
+          backgroundColor: theme.backgroundColor,
+        },
       ]}>
       {children}
       <TouchableOpacity onPress={onPressSubmit} style={styles.submitButton}>
