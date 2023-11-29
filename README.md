@@ -166,11 +166,15 @@ export default BottomUpSlideComponent;
 또한 BottomUpSlideInput 내부의 Input에 Ref 중복으로 인한 랜더링 이슈가 발생했습니다. <br/>
 
 forwardRef와 useImperativeHandle을 사용하여 부모 컴포넌트에서 자식 컴포넌트를 제어하는 경우, <br/>
-각 자식 컴포넌트에 대해 별도의 ref를 생성해야 하는데 한개의 인풋을 여러 부모컴포넌트가 ref로 공유하다보니, <br/>
-원하는 컴포넌트가 아닌 최상위의 BottomUpSlideInput 컴포넌트만이 랜더링 되는 현상이 발생되었습니다. <br/>
-BottomUpSlideInput 컴포넌트를 내에서 사용처에 맞게 별도의 ref를 생성하고 인풋에 달아주며 문제를 해결할 수 있으나 오히려 가독성이 떨어지고, <br/>
-사용할 때마다 인풋과 ref를 추가해주어야 한다는 점에서 BottomUpSlideInput 컴포넌트를 BottomUpSliderComponent로 바꾸고 <br/>
+각 자식 컴포넌트에 대해 별도의 ref를 생성해야 하는데 한개의 인풋을 여러 부모컴포넌트가 ref 이어 공유하다보니, <br/>
+실제 사용할 때에는 원하는 컴포넌트가 아닌 스크린에서 최상위 컴포넌트에서 선언된 BottomUpSlideInput 컴포넌트만이 랜더링 되는 현상이 발생되었습니다. <br/>
+해결 방법으로는 BottomUpSlideInput 컴포넌트 내에서 사용처에 맞게 ref와 input을 생성하고 인풋에 달아주는 방법이 있었으나 가독성이 떨어지고, <br/>
+추가로 사용처가 생길때마다 인풋과 ref를 추가해주어야 한다는 점과 input외에 다른 요소들이 들어오는 점이 더 확장성을 고려한 컴포넌트라 생각하였습니다.
+
+BottomUpSlideInput 컴포넌트를 BottomUpSliderComponent로 이름을 바꿔주고  <br/>
 Input을 children으로 전달한 뒤 `editMode` State를 통해 Input을 컨트롤 하였습니다. <br/>
+
+변경한 코드는 아래와 같습니다.
 
 ```tsx
 {
@@ -209,7 +213,7 @@ Input을 children으로 전달한 뒤 `editMode` State를 통해 Input을 컨트
       }
 ```
 
-Dry 원칙도 중요하나 한 눈에 의도를 알아 볼 수 있는 점이 더 클린하다고 생각하여 위처럼 코드를 작성하였습니다.
+Dry 원칙도 중요하나 한 눈에 의도를 알아 볼 수 있는 점이 더 클린하다고 생각하였습니다.
 
 ___
 
