@@ -65,7 +65,7 @@ const useChecklists = () => {
       Keyboard.dismiss();
     }, 500);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mutableCopyChecklist, allChecklists, selectedWeek, newChecklistContent]);
+  }, [mutableCopyChecklist, selectedWeek, newChecklistContent]);
 
   /**
    * @description 체크리스트를 수정하는 함수입니다. 수정된 체크리스트는 allChecklists state에 저장됩니다.

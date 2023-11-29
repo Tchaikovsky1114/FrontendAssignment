@@ -5,6 +5,7 @@ export const deepCopy = <T>(obj: T): T => {
   if (Array.isArray(obj)) {
     return obj.map(item => deepCopy(item)) as T;
   }
+
   const clonedObj = {} as T;
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {

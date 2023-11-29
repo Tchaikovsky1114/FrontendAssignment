@@ -21,7 +21,6 @@ const getStatusBarHeight = () => {
   }
   return 0;
 };
-console.log(screenHeight);
 
 const Appbar = ({name}: Props) => {
   const {theme} = useTheme();
@@ -34,7 +33,7 @@ const Appbar = ({name}: Props) => {
         {
           backgroundColor: theme.backgroundColor,
           paddingTop: 60 + statusBarHeight,
-          paddingBottom: 16,
+          paddingBottom: screenHeight < 800 ? 20 : 0,
         },
       ]}>
       <View style={[styles.wrapper]}>

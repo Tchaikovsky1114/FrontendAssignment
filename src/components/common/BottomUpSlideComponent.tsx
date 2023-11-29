@@ -32,7 +32,7 @@ const BottomUpSlideComponent = ({
     setFakeLoading(true);
     delay(() => {
       setFakeLoading(false);
-    }, 1000);
+    }, 500);
   };
 
   return (
