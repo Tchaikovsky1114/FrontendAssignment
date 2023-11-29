@@ -394,8 +394,6 @@ const ProgressBarComponent = useCallback(({ completedCount, inCompletedCount }: 
 
 ![example](https://github.com/Tchaikovsky1114/FrontendAssignment/assets/96774661/b5217115-42c7-4535-8b55-aada07e776bf)
 
-
-
 ### Etc
 
 사용한 3rd 라이브러리
