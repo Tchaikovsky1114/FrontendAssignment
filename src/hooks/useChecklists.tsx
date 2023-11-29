@@ -150,12 +150,10 @@ const useChecklists = () => {
     if (!editText || !submitValue) {
       return;
     }
-
     updateChecklistChanges({
       ...submitValue,
       content: editText,
     });
-
     setEditMode('await');
     Keyboard.dismiss();
     // eslint-disable-next-line react-hooks/exhaustive-deps

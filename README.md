@@ -386,6 +386,116 @@ const ProgressBarComponent = useCallback(({ completedCount, inCompletedCount }: 
   );
 ```
 
+  4. 체크리스트의 CRUD
+  체크리스트를 업데이트하는 과정에서 세 가지 로직을 고민하였습니다. <br/>
+  각각의 로직은 불변성, 코드 가독성 측면에서 장단점을 가지고 있어서 선택하기 어려웠고, 어떤 것이 더 좋은 코드인지 고심하였습니다. <br/>
+  
+  - 첫번째 방법. 불변성 그리고 복잡성<br/>
+  첫 번째 방법은 useMemo와 함께 깊은 복사를 통해 불변성을 확보하고자 했습니다. <br/>
+  현재 체크리스트는 2뎁스의 객체이지만 추가적인 프로퍼티나 요구사항이 고도화 될 때의 확장성에 초점을 맞추었습니다. <br/>
+  다만 깊은 복사 로직이 추가되고, `useMemo`를 사용함으로서 관리해야하는 의존성 배열이 늘어난다는 단점이 있었습니다. <br/>
+  또한 Memoization은 성능상 이점을 가져올 수 있지만, 상태 업데이트마다 새로운 객체를 생성하는 부분에서 성능을 떨어뜨릴 수 있을 것이라는 고민이 있었습니다. <br/>
+
+```tsx
+const mutableCopyChecklist = useMemo(
+  () => deepCopy(allChecklists),
+  [allChecklists],
+);
+
+const updateChecklistChanges = useCallback(
+  (newChecklist: NewChecklist) => {
+    if (!mutableCopyChecklist) {
+      return;
+    }
+
+    const weekNumber = newChecklist.weekNumber;
+    const index = mutableCopyChecklist[weekNumber].findIndex(
+      checklist => checklist.id === newChecklist.id,
+    );
+    if (index < 0) {
+      return;
+    }
+    mutableCopyChecklist[weekNumber][index] = newChecklist;
+    setAllChecklists(mutableCopyChecklist);
+  },
+  [mutableCopyChecklist],
+);
+```
+
+  - 두 번째 방법. 간결함과 확장성 <br/>
+  두 번째 방법은 얕은 복사를 중첩 사용하여 코드를 더 간단하게 만들고자 했습니다. <br/>
+  현재의 체크리스트 구조에서는 2단계 정도의 깊이이기 때문에 얕은복사 또한 적절할 것으로 판단했습니다. <br/>
+  하지만 추가적인 프로퍼티를 사용하거나 깊이가 깊어지는 요구사항에 적절하게 대처하기 어려울 수 있고, <br/>
+  생성, 삭제, 수정 등 데이터를 조작하는 로직에 중복된 내부 로직이 증가하는 단점이 있었습니다.
+
+
+```tsx
+  const updateChecklistChanges = useCallback((newChecklist: NewChecklist) => {
+    const weekNumber = newChecklist.weekNumber;
+    setAllChecklists(prev => {
+      if (!prev) {
+        return {};
+      }
+      const mutable = {
+        ...prev,
+        [weekNumber]: [...prev[weekNumber]],
+      };
+      const index = prev[weekNumber].findIndex(
+        checklist => checklist.id === newChecklist.id,
+      );
+      if (index < 0) {
+        return prev;
+      }
+      mutable[weekNumber][index] = newChecklist;
+      return mutable;
+    });
+  }, []);
+```
+
+  - 세 번째 방법. 간결함과 확장성 <br/>
+  2번째와는 달리 코드 양이 줄어들었고, 불변성을 유지하면서도 코드를 간결하게 유지할 수 있는 방법으로 보였습니다.<br/>
+  하지만 이 역시 2번째 방법이 갖는 확장성 부족과 여러 곳에서 사용 할 때 중복 로직이라는 단점이 있었으며,<br/>
+  코드의 양은 줄어들었지만 주관적 가독성이 상대적으로 낮아졌습니다. <br/>
+  특히, 업데이트된 체크리스트를 찾아내는 로직이 한 줄에 모두 표현되어 있어 코드를 유지보수 할 때 난해할 수 있다고 생각했습니다. <br/>
+
+```tsx
+const updateChecklistChanges = useCallback((newChecklist: NewChecklist) => {
+  setAllChecklists(prev => {
+    if (!prev) {
+      return {};
+    }
+    const weekNumber = newChecklist.weekNumber;
+    const mutableChecklists = {
+      ...prev,
+      [weekNumber]: prev[weekNumber]?.map(item =>
+        item.id === newChecklist.id ? newChecklist : item
+      ),
+    };
+    return mutableChecklists;
+  });
+}, []);
+```
+
+### 선택
+
+첫 번째 방법을 선택한 이유는 불변성 유지와 확장성 측면에서의 안정성을 중시했기 때문입니다. <br/>
+
+1. 불변성의 확보 <br/>
+useMemo와 함께 깊은 복사를 통해 불변성을 확보하는데 주력했습니다. <br/>
+
+2. 확장성에 대한 고려 <br/>
+현재 체크리스트는 2단계의 객체이지만, 추가적인 프로퍼티나 요구사항이 고도화될 때의 확장성에 초점을 맞추었습니다. <br/>
+
+3. Memoization을 통한 성능 최적화 <br/>
+useMemo를 사용하여 성능을 최적화하고자 했습니다. <br/>
+이는 불변성을 유지하면서도, 성능적인 이점을 가져올 수 있는 방법으로 판단했습니다. <br/>
+
+4. 코드 가독성의 유지 <br/>
+코드를 작성하면서 불변성을 확실히 유지하면서도 가독성을 최대한 유지하려고 노력했습니다. <br/>
+깊은 복사 로직이 추가되어 코드가 복잡해지는 단점이 있지만, 코드를 이해하는데 있어서 명확성을 유지하는 것이 중요하다고 판단했습니다. <br/>
+
+___
+
 ## D. 디바이스 크기를 고려한 디자인
 
 사용자들의 다양한 기기에서 일관된 및 향상된 앱 경험을 누릴 수 있도록 고민했습니다. <br/>
