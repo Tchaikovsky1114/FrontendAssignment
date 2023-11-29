@@ -140,23 +140,6 @@ const BottomUpSlideComponent = forwardRef<TextInput, {}>((_, ref) => {
 
 export default BottomUpSlideComponent;
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    position: 'absolute',
-    bottom: -10,
-    left: 0,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
-  input: {
-    height: 42,
-    backgroundColor: 'white',
-    borderRadius: 12,
-    borderWidth: 1,
-  },
-});
-
 ```
 
 실제 해당 컴포넌트를 여러곳에서 사용할 때, 이벤트 리스너 해제를 제대로 하지 않아 정상적으로 Input이 랜더링 되지 않는 현상이 발생되었습니다. <br/>
