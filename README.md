@@ -20,8 +20,11 @@
 ## A. Animation
 
 1. Bottom Up Slide Animation
-`KeyboardAvoidingView`를 사용하면 `keyboardVerticalOffset`의 값을 하드코딩으로 넣어 맞춰야 해서 다양한 기기에서 정확한 값을 구현하기 어려웠습니다.<br/>
-RN이 기본 제공하는 Keyboard를 사용하여 높이를 구해 연산을 하면 키보드에 맞추어 인풋을 올려보낼 수 있었으나 애니메이션이 부자연스러웠습니다.<br/>
+
+<br/>
+
+`KeyboardAvoidingView`를 사용하면 `keyboardVerticalOffset` 값을 하드코딩으로 넣어 맞춰야 해서 다양한 기기에서 정확한 값을 구현하기 어려웠습니다.<br/>
+React-native 내장 라이브러리인 `Keyboard`를 사용하여 높이를 구해 값을 구하면 키보드 크기에 맞추어 인풋을 올릴 수 있었으나 올라가는 애니메이션이 부자연스러웠습니다.<br/>
 
 그 당시 코드는 아래와 같습니다.<br/>
 ```tsx
@@ -51,8 +54,6 @@ const BottomUpSlideComponent = () => {
         {height: keyboardHeight + 12 + 40},
         {backgroundColor: theme.backgroundColor, width: width},
       ]}>
-      {/* keyboardHeight + paddingTopHeight + inputHeight */}
-
       <TextInput style={styles.input} />
     </KeyboardAvoidingView>
   );
@@ -61,9 +62,9 @@ const BottomUpSlideComponent = () => {
 export default BottomUpSlideComponent;
 ```
 
-시연영상을 자세히 보니 height값을 통해 에니메이션을 주고 있는 것 같았습니다. <br/>
+시연영상을 자세히 보니 height값을 통해 에니메이션을 구현하고 있는 것 같았습니다. <br/>
 기존 로직을 변경하고 react-native-reanimated를 사용하였고, <br/>
-쓰이는 곳이 많을 것 같아 커스텀 훅으로 구현하였습니다. <br/>
+해당 컴포넌트가 쓰이는 곳이 많을 것 같아 커스텀 훅으로 구현하였습니다. <br/>
 
 **useKeybardHeight**
 ```tsx
@@ -142,10 +143,10 @@ export default BottomUpSlideComponent;
 
 ```
 
-실제 해당 컴포넌트를 여러곳에서 사용할 때, 이벤트 리스너 해제를 제대로 하지 않아 정상적으로 Input이 랜더링 되지 않는 현상이 발생되었습니다. <br/>
+실제 해당 컴포넌트를 여러곳에서 사용할 때, 이벤트 리스너 해제가 되지 않아 정상적으로 Input이 랜더링 되지 않는 현상이 발생되었습니다. <br/>
 `Error: Attempted to remove more RCtKeyboardObserver listteneners than added` <br/>
 
-이벤트를 변수에 할당하여 ComponentDidUnmount시 해당 이밴트를 지우는 방식으로 해결하였습니다. <br/>
+이벤트를 변수에 할당하여 `ComponentDidUnmount`시 이밴트를 지우는 방식으로 해결하였습니다. <br/>
 
 ```tsx
   useEffect(() => {
@@ -157,19 +158,20 @@ export default BottomUpSlideComponent;
       setKeyboardHeight(0);
     });
     return () => {
-      // component will unmount일 때 삭제
+      // component did unmount일 때 삭제
       keyboardWillShowListener.remove(); 
       keyboardWillHideListener.remove();
     };
   }, []);
 ```
-또한 BottomUpSlideInput 내부의 Input에 Ref 중복으로 인한 랜더링 이슈가 발생했습니다. <br/>
+또한 BottomUpSlideInput을 여러곳에서 사용하다보니 TextInput에 할당한 useRef의 중복으로 인한 랜더링 이슈가 발생했습니다. <br/>
 
 forwardRef와 useImperativeHandle을 사용하여 부모 컴포넌트에서 자식 컴포넌트를 제어하는 경우, <br/>
-각 자식 컴포넌트에 대해 별도의 ref를 생성해야 하는데 한개의 인풋을 여러 부모컴포넌트가 ref 이어 공유하다보니, <br/>
-실제 사용할 때에는 원하는 컴포넌트가 아닌 스크린에서 최상위 컴포넌트에서 선언된 BottomUpSlideInput 컴포넌트만이 랜더링 되는 현상이 발생되었습니다. <br/>
-해결 방법으로는 BottomUpSlideInput 컴포넌트 내에서 사용처에 맞게 ref와 input을 생성하고 인풋에 달아주는 방법이 있었으나 가독성이 떨어지고, <br/>
-추가로 사용처가 생길때마다 인풋과 ref를 추가해주어야 한다는 점과 input외에 다른 요소들이 들어오는 점이 더 확장성을 고려한 컴포넌트라 생각하였습니다.
+각 자식 컴포넌트에 대해 별도의 ref를 생성해야 하는데,  한개의 인풋을 여러 부모컴포넌트가 ref 이어 공유하다보니, <br/>
+실제 사용할 때에는 원하는 컴포넌트가 아닌 스크린 최상위 컴포넌트에 선언된 BottomUpSlideInput 컴포넌트가 랜더링 되는 현상이 발생되었습니다. <br/>
+해결 방법으로는 BottomUpSlideInput 컴포넌트 내에서 사용처에 맞게 ref와 input을 생성하고 인풋에 달아주는 방법이 있었으나 <br/>
+코드의 의도를 쉽게 파악할 수 없고, 추가 사용처가 생길때마다 인풋과 ref를 해당 컴포넌트에 추가 해주어야하고, <br/>
+input외 다른 요소들이 들어올 수 없어 재사용성이 떨어지는 이유로 컴포넌트 리팩터링을 진행하게 되었습니다.
 
 BottomUpSlideInput 컴포넌트를 BottomUpSliderComponent로 이름을 바꿔주고  <br/>
 Input을 children으로 전달한 뒤 `editMode` State를 통해 Input을 컨트롤 하였습니다. <br/>
@@ -177,43 +179,95 @@ Input을 children으로 전달한 뒤 `editMode` State를 통해 Input을 컨트
 변경한 코드는 아래와 같습니다.
 
 ```tsx
-{
-        editMode === 'create' &&
-      <BottomUpSlideComponent onSubmit={createChecklist}>
-        <TextInput
-          ref={createChecklistRef}
-          style={[
-            styles.input,
-            {borderColor: theme.lightGrey, fontSize: theme.textXS},
-          ]}
-          value={newChecklistContent + ''}
-          placeholder='체크리스트를 입력해주세요'
-          onChangeText={onChangeNewChecklistContent}
-          selectionColor={theme.accent}
-          keyboardType='default'
-        />
-      </BottomUpSlideComponent>
-      }
-      {
-        editMode === 'update' &&
-        <BottomUpSlideComponent onSubmit={onSubmitUpdateContent}>
-          <TextInput
-          ref={updateChecklistInputRef}
-          style={[
-            styles.input,
-            {borderColor: theme.accent, fontSize: theme.textXS},
-          ]}
-          value={editText + ''}
-          placeholder='수정할 내용을 입력해주세요'
-          onChangeText={onChangeEditText}
-          selectionColor={theme.accent}
-          keyboardType='default'
-        />
-       </BottomUpSlideComponent>
-      }
+const BottomUpSlideComponent = ({
+  onSubmit,
+  children,
+}: PropsWithChildren<Props>) => {
+  const {width} = useWindowDimensions();
+  const {theme} = useTheme();
+  const {delay} = useDelay(); // timeout custom hook
+  const {keyboardHeight, animatedStyle} =
+  useKeyboardHeight({ additionalHeight: 64, }); // animation custom hook
+  
+  const [fakeLoading, setFakeLoading] = useState(false); // fake loading state
+
+  const onPressSubmit = () => {
+    onSubmit();
+    setFakeLoading(true);
+    delay(() => {
+      setFakeLoading(false);
+    }, 500);
+  };
+
+  return (
+    <Animated.View
+      style={[
+        styles.container,
+        animatedStyle,
+        {
+          width,
+          bottom: keyboardHeight ? 0 : -100,
+          backgroundColor: theme.backgroundColor,
+        },
+      ]}>
+      {children}
+      <TouchableOpacity onPress={onPressSubmit} style={styles.submitButton}>
+        {fakeLoading ? (
+          <ActivityIndicator color={theme.grey} size="small" />
+        ) : (
+          <Upload width={32} height={32} fill={theme.accent} />
+        )}
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
+
+export default BottomUpSlideComponent;
+
 ```
 
-Dry 원칙도 중요하나 한 눈에 의도를 알아 볼 수 있는 점이 더 클린하다고 생각하였습니다.
+`BottomUpSlideComponent`를 사용한 예시입니다.
+
+```tsx
+{
+  editMode === 'create' &&
+  <BottomUpSlideComponent onSubmit={createChecklist}>
+          {/* Children */}
+    <TextInput
+      ref={createChecklistRef}
+      style={[
+        styles.input,
+        {borderColor: theme.lightGrey, fontSize: theme.textXS},
+      ]}
+      value={newChecklistContent + ''}
+      placeholder='체크리스트를 입력해주세요'
+      onChangeText={onChangeNewChecklistContent}
+      selectionColor={theme.accent}
+      keyboardType='default'
+    />
+  </BottomUpSlideComponent>
+  }
+  {
+    editMode === 'update' &&
+    <BottomUpSlideComponent onSubmit={onSubmitUpdateContent}>
+            {/* Children */}
+      <TextInput
+      ref={updateChecklistInputRef}
+      style={[
+        styles.input,
+        {borderColor: theme.accent, fontSize: theme.textXS},
+      ]}
+      value={editText + ''}
+      placeholder='수정할 내용을 입력해주세요'
+      onChangeText={onChangeEditText}
+      selectionColor={theme.accent}
+      keyboardType='default'
+    />
+    </BottomUpSlideComponent>
+  }
+```
+
+Dry 원칙도 중요하나 한 눈에 의도를 알아 볼 수 있는 점이 더 클린하다고 생각하여 고민한 끝에 위처럼 사용하게 되었습니다.
 
 ___
 
