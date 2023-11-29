@@ -17,7 +17,6 @@ interface Props {
 
 const BottomUpSlideComponent = ({
   onSubmit,
-
   children,
 }: PropsWithChildren<Props>) => {
   const {width} = useWindowDimensions();
