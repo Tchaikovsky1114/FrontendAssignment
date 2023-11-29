@@ -26,9 +26,6 @@ export const itemWidth = screenWidth / 7; // item width
 export const itemSpacing = 8; // gap
 export const flatlistPadding = itemWidth * 3; // flatlist padding
 
-console.log('itemWidth', itemWidth);
-console.log('itemSpacing', itemSpacing);
-console.log('flatlistPadding', flatlistPadding);
 const ChecklistsScreen = () => {
   const weekTabsRef = useRef<FlatList>(null);
   const createChecklistRef = useRef<TextInput | null>(null);
